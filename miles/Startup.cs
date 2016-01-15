@@ -44,14 +44,23 @@ namespace Miles
         public void ConfigureServices(IServiceCollection services)
         {
             //dependency resolver
-            services.AddTransient<IRepo<ILocation>, LocationRepo>();
+            //repo
+            services.AddTransient<ILocationRepo, LocationRepo>();
+            services.AddTransient<IJourneyRepo, JourneyRepo>();
+            services.AddTransient<IJourneyLogRepo, JourneyLogRepo>();
+            //objects
             services.AddTransient<ILocation, Location>();
+            services.AddTransient<IJourney, Journey>();
+            services.AddTransient<IJourneyLog, JourneyLog>();
 
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
         }
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

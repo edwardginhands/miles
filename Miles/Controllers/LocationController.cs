@@ -12,13 +12,12 @@ namespace Miles.Controllers
     [Route("api/locations")]
     public class LocationController : Controller
     {
-        private IRepo<ILocation> _repo;
+        private ILocationRepo _repo;
 
-        public LocationController(IRepo<ILocation> repo)
+        public LocationController(ILocationRepo repo)
         {
             _repo = repo;
         }
-
 
         // GET: api/values
         [HttpGet]
@@ -54,6 +53,19 @@ namespace Miles.Controllers
         public void Delete(int id)
         {
             _repo.Delete(id);
+        }
+
+        // POST api/values
+        [HttpPost("~/home/{id}")]
+        public void SetHome(int id)
+        {
+            _repo.SetProfile(id, true);
+        }
+
+        [HttpPost("~/work/{id}")]
+        public void SetWork(int id)
+        {
+            _repo.SetProfile(id, false);
         }
     }
 }

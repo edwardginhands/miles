@@ -13,6 +13,8 @@ namespace Miles.Database
     {
         public DbSet<Location> Locations { get; set; }
         public DbSet<Journey> Journeys { get; set; }
+        public DbSet<JourneyLog> JourneyLogs { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
 
         // This method connects the context with the database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,15 +30,24 @@ namespace Miles.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Location>().HasKey(l => l.Id);
-
-            modelBuilder.Entity<Journey>()
-                .HasKey(l => l.Id);
+            modelBuilder.Entity<Journey>().HasKey(l => l.Id);
+            modelBuilder.Entity<JourneyLog>().HasKey(l => l.Id);
+            modelBuilder.Entity<Profile>().HasKey(l => l.Id);
 
             modelBuilder.Entity<Journey>()
                 .HasOne(l =>  l.StartLocation);
 
             modelBuilder.Entity<Journey>()
                 .HasOne(l =>  l.EndLocation);
+
+            modelBuilder.Entity<JourneyLog>()
+                .HasOne(l => l.Journey);
+
+            modelBuilder.Entity<Profile>()
+                .HasOne(l => l.HomeLocation);
+
+            modelBuilder.Entity<Profile>()
+               .HasOne(l => l.WorkLocation);
         }
     }
 }
