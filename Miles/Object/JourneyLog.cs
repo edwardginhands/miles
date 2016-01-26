@@ -6,7 +6,7 @@ namespace Miles.Object
     public class JourneyLog : IJourneyLog
     {
         public int Id { get; set; }
-        public IJourney Journey { get; set; }
+        public int JourneyId { get; set; }
         public DateTime Date { get; set; }
     }
 }

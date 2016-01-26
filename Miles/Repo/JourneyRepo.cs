@@ -6,74 +6,119 @@ using Miles.Database;
 using Miles.Object;
 using System.Linq.Expressions;
 using Miles.Interface;
-
+using Microsoft.Data.Entity;
 
 namespace Miles.Repo
 {
     public class JourneyRepo : IJourneyRepo
     {
-        private MilesDb db = new MilesDb();
+        // private MilesDb db = new MilesDb();
 
         public IEnumerable<IJourney> All()
         {
-            return db.Set<Dto.Journey>().Select(item => MapFromDto(item));
+            using (MilesDb db = new MilesDb())
+            {
+                /*
+                var items = db.Journeys.Include(l => l.StartLocation).Include(l => l.EndLocation);
+
+                var s = items.ToString();
+                foreach (var i in items)
+                {
+                    var x = MapFromDto(i);
+                }
+                return null;
+                */
+
+                var list = new List<IJourney>();
+
+                var items= db.Journeys.Include(l => l.StartLocation).Include(l => l.EndLocation);
+
+                foreach (var i in items)
+                {
+                    var toAdd = MapFromDto(i);
+                    list.Add(toAdd);
+                }
+
+                return list;
+            }
         }
 
 
         public void Dispose()
         {
-            db.Dispose();
+            using (MilesDb db = new MilesDb())
+            {
+                db.Dispose();
+            }
         }
 
         public IJourney Single(int Id)
         {
-           return MapFromDto(db.Journeys.Single(s => s.Id == Id));
+            using (MilesDb db = new MilesDb())
+            {
+                return MapFromDto(db.Journeys.Single(s => s.Id == Id));
+            }
         }
 
         public void Add(IJourney entity)
         {
-            var dto = MapToDto(entity);
-            db.Journeys.Add(dto);
-            db.SaveChanges();
+            using (MilesDb db = new MilesDb())
+            {
+                var dto = MapToDto(entity);
+                db.Journeys.Add(dto);
+                db.SaveChanges();
+                //db.Entry(dto).State = EntityState.Detached;
+            }
+
         }
 
 
         public void Update(IJourney entity)
         {
-            var newValues = MapToDto(entity);
-            var exiting = db.Journeys.Single(s => s.Id == newValues.Id);
-            if (exiting != null)
+            using (MilesDb db = new MilesDb())
             {
-                db.Journeys.Update(newValues);
-                db.SaveChanges();
+                var newValues = MapToDto(entity);
+                var exiting = db.Journeys.Single(s => s.Id == newValues.Id);
+                if (exiting != null)
+                {
+                    db.Journeys.Update(newValues);
+                    db.SaveChanges();
+                }
             }
         }
 
         public void Delete(int Id)
         {
-            var exiting = db.Journeys.Single(s => s.Id == Id);
-            if (exiting != null)
+            using (MilesDb db = new MilesDb())
             {
-                db.Journeys.Remove(exiting);
-                db.SaveChanges();
+                var exiting = db.Journeys.Single(s => s.Id == Id);
+                if (exiting != null)
+                {
+                    db.Journeys.Remove(exiting);
+                    db.SaveChanges();
+                }
             }
         }
 
-        public static Dto.Journey MapToDto(IJourney journey)
+        public Dto.Journey MapToDto(IJourney journey)
         {
-            var dto = new Dto.Journey
+            using (MilesDb db = new MilesDb())
             {
-                Id = journey.Id,
-                Distance = journey.Distance,
-                StartLocation = LocationRepo.MapToDto(journey.StartLocation),
-                EndLocation = LocationRepo.MapToDto(journey.EndLocation)
-            };
+                var dto = new Dto.Journey
+                {
+                    Id = journey.Id,
+                    Distance = journey.Distance,
+                    StartLocation = LocationRepo.MapToDto(journey.StartLocation),
+                    EndLocation = LocationRepo.MapToDto(journey.EndLocation)
+                };
 
-            return dto;
+                return dto;
+            }
         }
 
         public static IJourney MapFromDto(Dto.Journey dto)
         {
+   
             return new Journey
             {
                 Id = dto.Id,
@@ -81,6 +126,7 @@ namespace Miles.Repo
                 StartLocation = LocationRepo.MapFromDto(dto.StartLocation),
                 EndLocation = LocationRepo.MapFromDto(dto.EndLocation)
             };
+
         }
     }
 }

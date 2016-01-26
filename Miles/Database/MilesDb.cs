@@ -11,6 +11,7 @@ namespace Miles.Database
 {
     public class MilesDb : DbContext
     {
+
         public DbSet<Location> Locations { get; set; }
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<JourneyLog> JourneyLogs { get; set; }
@@ -34,9 +35,12 @@ namespace Miles.Database
             modelBuilder.Entity<JourneyLog>().HasKey(l => l.Id);
             modelBuilder.Entity<Profile>().HasKey(l => l.Id);
 
-            modelBuilder.Entity<Journey>()
-                .HasOne(l =>  l.StartLocation);
 
+
+            modelBuilder.Entity<Journey>()
+                .HasOne(l => l.StartLocation);
+ 
+            
             modelBuilder.Entity<Journey>()
                 .HasOne(l =>  l.EndLocation);
 
@@ -48,6 +52,19 @@ namespace Miles.Database
 
             modelBuilder.Entity<Profile>()
                .HasOne(l => l.WorkLocation);
+
+
+            modelBuilder.Entity<Journey>()
+                .HasOne(j => j.StartLocation)
+                .WithMany(l => l.StartJourneys);
+
+            modelBuilder.Entity<Journey>()
+                .HasOne(j => j.EndLocation)
+                .WithMany(l => l.EndJourneys);
+
+
+
         }
+
     }
 }

@@ -61,10 +61,12 @@ namespace Miles.Repo
 
         private Dto.JourneyLog MapToDto(IJourneyLog journeyLog)
         {
+            var journey = db.Journeys.Single(s => s.Id == journeyLog.JourneyId);
+
             var dto = new Dto.JourneyLog
             {
                 Id = journeyLog.Id,
-                Journey = JourneyRepo.MapToDto(journeyLog.Journey),
+                Journey = journey,
                 Date = journeyLog.Date
             };
 
@@ -76,7 +78,7 @@ namespace Miles.Repo
             return new JourneyLog
             {
                 Id = dto.Id,
-                Journey = JourneyRepo.MapFromDto(dto.Journey),
+                JourneyId = dto.Journey.Id,
                 Date = dto.Date
             };
         }

@@ -2,9 +2,9 @@
 {
     public interface IJourney
     {
+        int Id { get; set; }
         decimal Distance { get; set; }
         ILocation EndLocation { get; set; }
-        int Id { get; set; }
         ILocation StartLocation { get; set; }
     }
 }

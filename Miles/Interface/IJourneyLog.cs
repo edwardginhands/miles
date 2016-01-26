@@ -6,7 +6,7 @@ namespace Miles.Interface
     public interface IJourneyLog
     {
         int Id { get; set; }
-        IJourney Journey { get; set; }
+        int JourneyId { get; set; }
         DateTime Date { get; set; }
     }
 }
