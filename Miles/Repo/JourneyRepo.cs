@@ -108,8 +108,8 @@ namespace Miles.Repo
                 {
                     Id = journey.Id,
                     Distance = journey.Distance,
-                    StartLocation = LocationRepo.MapToDto(journey.StartLocation),
-                    EndLocation = LocationRepo.MapToDto(journey.EndLocation)
+                   // StartLocation = LocationRepo.MapToDto(journey.StartLocation),
+                  //  EndLocation = LocationRepo.MapToDto(journey.EndLocation)
                 };
 
                 return dto;
@@ -123,8 +123,8 @@ namespace Miles.Repo
             {
                 Id = dto.Id,
                 Distance = dto.Distance,
-                StartLocation = LocationRepo.MapFromDto(dto.StartLocation),
-                EndLocation = LocationRepo.MapFromDto(dto.EndLocation)
+                StartLocation = (Location) LocationRepo.MapFromDto(dto.StartLocation),
+                EndLocation = (Location) LocationRepo.MapFromDto(dto.EndLocation)
             };
 
         }
