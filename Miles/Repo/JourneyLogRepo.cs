@@ -6,7 +6,7 @@ using Miles.Database;
 using Miles.Object;
 using System.Linq.Expressions;
 using Miles.Interface;
-
+using Microsoft.Data.Entity;
 
 namespace Miles.Repo
 {
@@ -16,7 +16,17 @@ namespace Miles.Repo
 
         public IEnumerable<IJourneyLog> All()
         {
-            return db.Set<Dto.JourneyLog>().Select(item => MapFromDto(item));
+            var items = db.Set<Dto.JourneyLog>().Include(j => j.Journey);
+
+            var list = new List<IJourneyLog>();
+
+            foreach (var i in items)
+            {
+                var toAdd = MapFromDto(i);
+                list.Add(toAdd);
+            }
+
+            return list;
         }
 
 
@@ -27,7 +37,7 @@ namespace Miles.Repo
 
         public IJourneyLog Single(int Id)
         {
-           return MapFromDto(db.JourneyLogs.Single(s => s.Id == Id));
+            return MapFromDto(db.JourneyLogs.Include(j => j.Journey).Single(s => s.Id == Id));
         }
 
         public void Add(IJourneyLog entity)
