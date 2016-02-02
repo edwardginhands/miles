@@ -4,7 +4,16 @@
     <meta charset="utf-8" />
     <title></title>
 </head>
-<body>
-    hello
+<body >
+    <div ng-app="miles" ng-controller="milesCtl" />
+    <table>
+        <tr ng-repeat="x in journeys">
+            <td>{{ x.Id }}</td>
+            <td>{{ x.EndLocation }}</td>
+        </tr>
+    </table>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"> </script>
+    <script src="./miles.js"> </script>
 </body>
 </html>
