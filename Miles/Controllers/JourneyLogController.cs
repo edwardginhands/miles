@@ -21,7 +21,7 @@ namespace Miles.Controllers
 
         // GET: api/values
         [HttpGet]
-        public IEnumerable<IJourneyLog> Get()
+        public IJourneyLogList Get()
         {
             var items = _repo.All();
             return items;

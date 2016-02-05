@@ -25,6 +25,6 @@ namespace Miles.Repo
 
     public interface IJourneyLogRepo : IRepo<IJourneyLog>
     {
-
+        IJourneyLogList AllAsList();
     }
 }

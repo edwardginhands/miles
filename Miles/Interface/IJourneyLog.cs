@@ -7,6 +7,9 @@ namespace Miles.Interface
     {
         int Id { get; set; }
         int JourneyId { get; set; }
-        DateTime Date { get; set; }
+        string Date { get; set; }
+        ILocation StartLocation { get; set; }
+        ILocation EndLocation { get; set; }
+        decimal Distance { get; set; }
     }
 }

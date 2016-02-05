@@ -7,6 +7,7 @@ using Miles.Object;
 using System.Linq.Expressions;
 using Miles.Interface;
 using Microsoft.Data.Entity;
+using System.Globalization;
 
 namespace Miles.Repo
 {
@@ -16,10 +17,13 @@ namespace Miles.Repo
 
         public IEnumerable<IJourneyLog> All()
         {
-            var items = db.Set<Dto.JourneyLog>().Include(j => j.Journey);
+            var items = db.Set<Dto.JourneyLog>()
+                .Include(j => j.Journey)
+                .Include(j => j.Journey.StartLocation)
+                .Include(j => j.Journey.EndLocation);
 
             var list = new List<IJourneyLog>();
-
+           
             foreach (var i in items)
             {
                 var toAdd = MapFromDto(i);
@@ -27,6 +31,30 @@ namespace Miles.Repo
             }
 
             return list;
+        }
+
+        public IJourneyLogList AllAsList()
+        {
+            IJourneyLogList toReturn = new JourneyLogList();
+            var items = db.Set<Dto.JourneyLog>()
+                .Include(j => j.Journey)
+                .Include(j => j.Journey.StartLocation)
+                .Include(j => j.Journey.EndLocation);
+
+            var list = new List<IJourneyLog>();
+            decimal totalDistance = 0;
+            DateTime minDate;
+            DateTime maxDate;
+            foreach (var i in items)
+            {
+                var toAdd = MapFromDto(i);
+                list.Add(toAdd);
+                totalDistance += toAdd.Distance;
+            }
+
+
+
+            return toReturn;
         }
 
 
@@ -77,7 +105,7 @@ namespace Miles.Repo
             {
                 Id = journeyLog.Id,
                 Journey = journey,
-                Date = journeyLog.Date
+                Date = DateTime.ParseExact(journeyLog.Date, "dd-MM-yyyy", CultureInfo.InvariantCulture)
             };
 
             return dto;
@@ -89,7 +117,10 @@ namespace Miles.Repo
             {
                 Id = dto.Id,
                 JourneyId = dto.Journey.Id,
-                Date = dto.Date
+                Date = dto.Date.ToString("dd-MM-yyyy"),
+                StartLocation = LocationRepo.MapFromDto(dto.Journey.StartLocation),
+                EndLocation = LocationRepo.MapFromDto(dto.Journey.EndLocation),
+                Distance = dto.Journey.Distance
             };
         }
     }
